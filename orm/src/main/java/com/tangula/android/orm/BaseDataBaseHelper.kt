@@ -14,33 +14,67 @@ import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 import java.util.*
 
+/**
+ * The interface which defined how to create a database.
+ * @author Dose &middot; King &lt;doss.king@outlook.com&gt;
+ */
 interface DbCreator {
-
+    /**
+     * Obtain the database's name.
+     * @return database name.
+     */
     fun getDataBaseName(): String
 
+    /**
+     * Obtain the database's version.
+     */
     fun getDataBaseVersion(): Int
 
+    /**
+     * Callback function when database not exists.
+     */
     fun onCreate(db: SQLiteDatabase) {}
 
+    /**
+     * Callback function when database exists and it's version is lower than current version.
+     */
     fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 }
 
+/**
+ * Database Helper with basic features.
+ * @author Dose &middot; King &lt;doss.king@outlook.com&gt;
+ */
 abstract class BaseDataBaseHelper<T : Entity<String>> {
 
 
     companion object {
 
+        /**
+         * The helper singleton instance.
+         */
         @JvmStatic
         private var HELPER: SQLiteOpenHelper? = null
 
+        /**
+         * The database singleton instance.
+         */
         @JvmStatic
         private var DB: SQLiteDatabase? = null
 
+        /**
+         * The context supplier function.
+         *
+         * When the helper create the database, it would use this function's reutrn value as Context.
+         */
         @JvmStatic
         var CONTEXT_FAC: ContextSupplier? = null
 
+        /**
+         * The DbCreator instance.
+         */
         @JvmStatic
-        var DB_CREATOR: DbCreator? = null
+        private var DB_CREATOR: DbCreator? = null
 
         @JvmStatic
         fun setDbCreator(creator: DbCreator){
@@ -68,6 +102,15 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
             }
         }
 
+        /**
+         * Obtian the singleton database instance.
+         *
+         * If the database not exists, this function would create the database. So when you first invoke
+         * it, the process would spend more time than normal.
+         *
+         * This function would initial HELP and DB property of this class's static fields.
+         *
+         */
         @JvmStatic
         fun getDatabase(): SQLiteDatabase? {
             if (HELPER == null) {
@@ -80,211 +123,338 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
             return DB
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::beginTransaction}.
+         */
         @JvmStatic
         protected fun beginTransaction() {
             getDatabase()!!.beginTransaction()
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::beginTransactionNonExclusive}.
+         */
         @JvmStatic
         protected fun beginTransactionNonExclusive() {
             getDatabase()!!.beginTransactionNonExclusive()
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::beginTransactionWithListener}.
+         */
         @JvmStatic
         protected fun beginTransactionWithListener(transactionListener: SQLiteTransactionListener) {
             getDatabase()!!.beginTransactionWithListener(transactionListener)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::beginTransactionWithListenerNonExclusive}.
+         */
         @JvmStatic
         protected fun beginTransactionWithListenerNonExclusive(transactionListener: SQLiteTransactionListener) {
             getDatabase()!!.beginTransactionWithListenerNonExclusive(transactionListener)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::endTransaction}.
+         */
         @JvmStatic
         protected fun endTransaction() {
             getDatabase()!!.endTransaction()
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::setTransactionSuccessful}.
+         */
         @JvmStatic
         protected fun setTransactionSuccessful() {
             getDatabase()!!.setTransactionSuccessful()
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::inTransaction}.
+         */
         @JvmStatic
         protected fun inTransaction(): Boolean {
             return getDatabase()!!.inTransaction()
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::getVersion}.
+         */
         @JvmStatic
         protected fun getVersion(): Int {
             return getDatabase()!!.version
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::setVersion}.
+         */
         @JvmStatic
         protected fun setVersion(version: Int) {
             getDatabase()!!.version = version
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::SQLException}.
+         */
         @JvmStatic
         @Throws(SQLException::class)
         protected fun compileStatement(sql: String): SQLiteStatement {
             return getDatabase()!!.compileStatement(sql)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::query}.
+         */
         @JvmStatic
         protected fun query(distinct: Boolean, table: String, columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String, limit: String): Cursor {
             return getDatabase()!!.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::query}.
+         */
         @JvmStatic
         protected fun query(distinct: Boolean, table: String, columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String, limit: String, cancellationSignal: CancellationSignal): Cursor {
             return getDatabase()!!.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit, cancellationSignal)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::queryWithFactory}.
+         */
         @JvmStatic
         protected fun queryWithFactory(cursorFactory: SQLiteDatabase.CursorFactory, distinct: Boolean, table: String, columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String, limit: String): Cursor {
             return getDatabase()!!.queryWithFactory(cursorFactory, distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::queryWithFactory}.
+         */
         @JvmStatic
         protected fun queryWithFactory(cursorFactory: SQLiteDatabase.CursorFactory, distinct: Boolean, table: String, columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String, limit: String, cancellationSignal: CancellationSignal): Cursor {
             return getDatabase()!!.queryWithFactory(cursorFactory, distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit, cancellationSignal)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::query}.
+         */
         @JvmStatic
         protected fun query(table: String?, columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String): Cursor {
             return getDatabase()!!.query(table, columns, selection, selectionArgs, groupBy, having, orderBy)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::query}.
+         */
         @JvmStatic
         protected fun query(table: String, columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String, limit: String): Cursor {
             return getDatabase()!!.query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::rawQuery}.
+         */
         @JvmStatic
         protected fun rawQuery(sqlResId: Int, selectionArgs: Array<String>): Cursor {
             return rawQuery(CONTEXT_FAC!!.get().getString(sqlResId), selectionArgs)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::rawQuery}.
+         */
         @JvmStatic
         protected fun rawQuery(sql: String, selectionArgs: Array<String>): Cursor {
             return getDatabase()!!.rawQuery(sql, selectionArgs)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::rawQuery}.
+         */
         @JvmStatic
         protected fun rawQuery(sqlResId: Int, selectionArgs: Array<String>, cancellationSignal: CancellationSignal): Cursor {
             return rawQuery(CONTEXT_FAC!!.get().getString(sqlResId), selectionArgs, cancellationSignal)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::rawQuery}.
+         */
         @JvmStatic
         protected fun rawQuery(sql: String, selectionArgs: Array<String>, cancellationSignal: CancellationSignal): Cursor {
             return getDatabase()!!.rawQuery(sql, selectionArgs, cancellationSignal)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::rawQueryWithFactory}.
+         */
         @JvmStatic
         protected fun rawQueryWithFactory(cursorFactory: SQLiteDatabase.CursorFactory, sql: String, selectionArgs: Array<String>, editTable: String): Cursor {
             return getDatabase()!!.rawQueryWithFactory(cursorFactory, sql, selectionArgs, editTable)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::rawQueryWithFactory}.
+         */
         @JvmStatic
         protected fun rawQueryWithFactory(cursorFactory: SQLiteDatabase.CursorFactory, sql: String, selectionArgs: Array<String>, editTable: String, cancellationSignal: CancellationSignal): Cursor {
             return getDatabase()!!.rawQueryWithFactory(cursorFactory, sql, selectionArgs, editTable, cancellationSignal)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::insert}.
+         */
         @JvmStatic
         protected fun insert(table: String, nullColumnHack: String, values: ContentValues): Long {
             return getDatabase()!!.insert(table, nullColumnHack, values)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::insertOrThrow}.
+         */
         @JvmStatic
         @Throws(SQLException::class)
         protected fun insertOrThrow(table: String, nullColumnHack: String?, values: ContentValues): Long {
             return getDatabase()!!.insertOrThrow(table, nullColumnHack, values)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::replace}.
+         */
         @JvmStatic
         protected fun replace(table: String, nullColumnHack: String, initialValues: ContentValues): Long {
             return getDatabase()!!.replace(table, nullColumnHack, initialValues)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::replaceOrThrow}.
+         */
         @JvmStatic
         @Throws(SQLException::class)
         protected fun replaceOrThrow(table: String, nullColumnHack: String, initialValues: ContentValues): Long {
             return getDatabase()!!.replaceOrThrow(table, nullColumnHack, initialValues)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::insertWithOnConflict}.
+         */
         @JvmStatic
         protected fun insertWithOnConflict(table: String, nullColumnHack: String, initialValues: ContentValues, conflictAlgorithm: Int): Long {
             return getDatabase()!!.insertWithOnConflict(table, nullColumnHack, initialValues, conflictAlgorithm)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::delete}.
+         */
         @JvmStatic
         protected fun delete(table: String, whereClause: String, whereArgs: Array<String>): Int {
             return getDatabase()!!.delete(table, whereClause, whereArgs)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::update}.
+         */
         @JvmStatic
         protected fun update(table: String, values: ContentValues, whereClause: String, whereArgs: Array<String>): Int {
             return getDatabase()!!.update(table, values, whereClause, whereArgs)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::updateWithOnConflict}.
+         */
         @JvmStatic
         protected fun updateWithOnConflict(table: String, values: ContentValues, whereClause: String, whereArgs: Array<String>, conflictAlgorithm: Int): Int {
             return getDatabase()!!.updateWithOnConflict(table, values, whereClause, whereArgs, conflictAlgorithm)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::execSQL}.
+         */
         @JvmStatic
         protected fun execSQL(resId: Int) {
             execSQL(CONTEXT_FAC!!.get().getString(resId))
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::execSQL}.
+         */
         @JvmStatic
         @Throws(SQLException::class)
         protected fun execSQL(sql: String) {
             getDatabase()!!.execSQL(sql)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::execSQL}.
+         */
         @JvmStatic
         protected fun execSQL(resId: Int, bindArgs: Array<Any>) {
             execSQL(CONTEXT_FAC!!.get().getString(resId, *bindArgs))
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::execSQL}.
+         */
         @JvmStatic
         @Throws(SQLException::class)
         protected fun execSQL(sql: String, bindArgs: Array<Any>) {
             getDatabase()!!.execSQL(sql, bindArgs)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::validateSql}.
+         */
         @JvmStatic
         protected fun validateSql(sql: String, cancellationSignal: CancellationSignal?) =//getDatabase().validateSql(sql, cancellationSignal);
                 Unit
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::isReadOnly}.
+         */
         @JvmStatic
         protected fun isReadOnly(): Boolean {
             return getDatabase()!!.isReadOnly
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::isOpen}.
+         */
         @JvmStatic
         protected fun isOpen(): Boolean {
             return getDatabase()!!.isOpen
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::needUpgrade}.
+         */
         @JvmStatic
         protected fun needUpgrade(newVersion: Int): Boolean {
             return getDatabase()!!.needUpgrade(newVersion)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::setLocale}.
+         */
         @JvmStatic
         protected fun setLocale(locale: Locale) {
             getDatabase()!!.setLocale(locale)
         }
 
+        /**
+         * This is a proxy function for {SQLiteDatabase::setMaxSqlCacheSize}.
+         */
         @JvmStatic
         protected fun setMaxSqlCacheSize(cacheSize: Int) {
             getDatabase()!!.setMaxSqlCacheSize(cacheSize)
         }
 
 
+        /**
+         * create the table which be defined in the entity class.
+         * @param[entityClz] the entity class, which defined the table.
+         * @param[force] is force create table.
+         * when force is true, it would drop the table if it exists. when force is false, and if
+         * the table exists, would execute nothing.
+         */
         @JvmStatic
         fun <T : Entity<String>> createTable(entityClz: Class<T>, force: Boolean){
 
@@ -294,18 +464,17 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
                 return
             }
 
-            val ddl = StringBuffer()
 
             val tablename: String = clz_ann.value ?: return
 
-            val column_defs = StringBuffer("\tid text primary key")
+            val column_defs = StringBuffer("\tid text primary key") //default id column.
 
             for(f in entityClz.declaredFields){
-                if(StringUtils.equals("id", f.name)){
+                if(StringUtils.equals("id", f.name)){ //skip the id property, and id type is uuid..
                     continue
                 }
 
-                var field_ann: Column? = f.getAnnotation(Column::class.java) ?: continue
+                val field_ann: Column? = f.getAnnotation(Column::class.java) ?: continue
 
                 val col_name = field_ann?.value
                 val col_type = field_ann?.type
@@ -316,22 +485,20 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
 
             }
 
-
-            ddl.append("create table if not exists $tablename ($column_defs)")
-            val ddl_sql = ddl.toString()
-
-            if(force){
-                getDatabase()!!.execSQL("drop table if exists $tablename")
+            if(force){ // if force is true, drop the exists table first.
+                execSQL("drop table if exists $tablename")
             }
-            getDatabase()!!.execSQL(ddl_sql)
+
+            //execute the create sql of the table.
+            execSQL("create table if not exists $tablename ($column_defs)")
 
         }
 
-
     }
 
-
-
+    /**
+     * Obtain the query reuslt,.
+     */
     fun byCondition(condition: String, args: Array<String>, group: String, having: String, orderby: String): List<T> {
         val res = ArrayList<T>()
 
@@ -379,6 +546,9 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
         return res
     }
 
+    /**
+     * .
+     */
     fun byId(id: String): T? {
         var entity: T? = null
 
@@ -429,6 +599,9 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
         return entity
     }
 
+    /**
+     * .
+     */
     private fun cusor2Entity(entity: T?, columns: List<String>, map: Map<String, Field>, c: Cursor) {
         for (col_name in columns) {
             Log.i("console", "col:$col_name")
@@ -452,6 +625,9 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
         }
     }
 
+    /**
+     * .
+     */
     fun delete(entity: T?): Int {
         var res = 0
         if (entity == null || StringUtils.isBlank(entity!!.id)) {
@@ -474,6 +650,9 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
     }
 
 
+    /**
+     * .
+     */
     fun save(entity: T?): T? {
 
         if (entity == null) {
@@ -553,10 +732,11 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
         return entity
     }
 
+    /**
+     * .
+     */
     private fun obtainEntityTableName(clz: Class<*>): String? {
-        val ann_table = clz.getAnnotation(Table::class.java) ?: return null
-
-        return ann_table.value
+        return clz.getAnnotation(Table::class.java).value
     }
 
 }
