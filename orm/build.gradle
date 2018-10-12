@@ -43,8 +43,8 @@ configurations.all{
 
 
 dependencies {
-    implementation 'com.tangula.android:commons:0.0.1-SNAPSHOT'
     implementation fileTree(include: ['*.jar', 'aar'], dir: 'libs')
+    implementation 'com.github.eastoneking:tangula-android-common:V0.0.1@aar'
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect
