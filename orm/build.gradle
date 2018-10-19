@@ -11,12 +11,12 @@ archivesBaseName = 'orm'
 version = '0.0.1-SNAPSHOT'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 16
         //noinspection OldTargetApi
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
@@ -44,7 +44,7 @@ configurations.all{
 
 dependencies {
     implementation fileTree(include: ['*.jar', 'aar'], dir: 'libs')
-    implementation 'com.github.eastoneking:tangula-android-commons:0.0.5@aar'
+    implementation "com.github.eastoneking:tangula-android-commons:$tangula_version@aar"
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect
@@ -58,22 +58,4 @@ dependencies {
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "com.android.support.test:runner:$support_test_version"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
-}
-
-def GROUP_ID = "com.tangula.android"
-
-
-uploadArchives {
-    repositories.mavenDeployer{
-        repository(url:repoUrl(version)){
-            authentication(userName:mvn_repo_user,password:mvn_repo_pwd)
-        }
-
-        pom.project {
-            groupId GROUP_ID
-            artifactId archivesBaseName
-            version version
-            packaging 'aar'
-        }
-    }
 }
