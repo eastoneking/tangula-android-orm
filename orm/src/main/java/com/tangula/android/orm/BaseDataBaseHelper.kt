@@ -459,7 +459,6 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
         fun <T : Entity<String>> createTable(database: SQLiteDatabase, entityClz: Class<T>, force: Boolean){
 
             val clz_ann:Table? =  entityClz.getAnnotation(Table::class.java)
-            println(clz_ann)
             if(clz_ann==null){
                 return
             }
@@ -491,55 +490,6 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
 
             //execute the create sql of the table.
             database.execSQL("create table if not exists $tablename ($column_defs)")
-
-        }
-
-
-
-        /**
-         * create the table which be defined in the entity class.
-         * @param[entityClz] the entity class, which defined the table.
-         * @param[force] is force create table.
-         * when force is true, it would drop the table if it exists. when force is false, and if
-         * the table exists, would execute nothing.
-         */
-        @JvmStatic
-        @Deprecated("", ReplaceWith("[createTable]"), DeprecationLevel.WARNING)
-        fun <T : Entity<String>> createTable(entityClz: Class<T>, force: Boolean){
-
-           val clz_ann:Table? =  entityClz.getAnnotation(Table::class.java)
-            println(clz_ann)
-            if(clz_ann==null){
-                return
-            }
-
-
-            val tablename: String = clz_ann.value ?: return
-
-            val column_defs = StringBuffer("\tid text primary key") //default id column.
-
-            for(f in entityClz.declaredFields){
-                if(StringUtils.equals("id", f.name)){ //skip the id property, and id type is uuid..
-                    continue
-                }
-
-                val field_ann: Column? = f.getAnnotation(Column::class.java) ?: continue
-
-                val col_name = field_ann?.value
-                val col_type = field_ann?.type
-
-                if(col_name!=null&&col_type!=null){
-                    column_defs.append(",\n\t$col_name ${col_type.name}")
-                }
-
-            }
-
-            if(force){ // if force is true, drop the exists table first.
-                execSQL("drop table if exists $tablename")
-            }
-
-            //execute the create sql of the table.
-            execSQL("create table if not exists $tablename ($column_defs)")
 
         }
 
