@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteStatement
 import android.database.sqlite.SQLiteTransactionListener
 import android.os.CancellationSignal
-import android.provider.SyncStateContract.Helpers.update
 import android.util.Log
 import org.apache.commons.lang3.StringUtils
 import java.lang.reflect.Field
@@ -88,10 +87,12 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
                 if (HELPER == null) {
                     HELPER = object : SQLiteOpenHelper(CONTEXT_FAC!!.get(), DB_CREATOR!!.getDataBaseName(), null, DB_CREATOR!!.getDataBaseVersion()) {
                         override fun onCreate(db: SQLiteDatabase) {
+                            Log.v("tgldb", "create database")
                             DB_CREATOR?.onCreate(db)
                         }
 
                         override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+                            Log.v("tgldb", "upgrade database")
                             DB_CREATOR?.onUpgrade(db, oldVersion, newVersion)
                         }
                     }
@@ -509,36 +510,36 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
 
         for (field in clazz.declaredFields) {
             val col = field.getAnnotation(Column::class.java) ?: continue
-            val col_name = col.value
-            if (col_name == null || col_name!!.trim { it <= ' ' } == "") {
+            val colName = col.value
+            if (colName.trim { it <= ' ' } == "") {
                 continue
             }
-            columns.add(col_name)
-            map[col_name] = field
+            columns.add(colName)
+            map[colName] = field
         }
 
-        val field_arr = columns.toTypedArray()
+        val fieldArr = columns.toTypedArray()
         columns.toTypedArray()
         var c: Cursor? = null
         try {
-            val table_name = obtainEntityTableName(clazz)
-            c = query(table_name, field_arr, condition, args, group, having, orderby)
+            val tableName = obtainEntityTableName(clazz)
+            c = query(tableName, fieldArr, condition, args, group, having, orderby)
             while (c.moveToNext()) {
                 try {
                     val entity = clazz.newInstance()
                     cusor2Entity(entity, columns, map, c)
                     res.add(entity)
                 } catch (e: InstantiationException) {
-                    Log.e("console", e.localizedMessage, e)
+                    Log.e("tgldb", e.localizedMessage, e)
                     continue
                 } catch (e: IllegalAccessException) {
-                    Log.e("console", e.localizedMessage, e)
+                    Log.e("tgldb", e.localizedMessage, e)
                     continue
                 }
 
             }
         } catch (e: Exception) {
-            Log.e("console", e.localizedMessage, e)
+            Log.e("tgldb", e.localizedMessage, e)
         } finally {
             c?.close()
         }
@@ -559,40 +560,38 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
 
         for (field in clazz.declaredFields) {
             val col = field.getAnnotation(Column::class.java) ?: continue
-            val col_name = col.value
-            if (col_name == null || col_name!!.trim { it <= ' ' } == "") {
+            val colName = col.value
+            if (colName.trim { it <= ' ' } == "") {
                 continue
             }
 
-            columns.add(col_name)
-            map[col_name] = field
+            columns.add(colName)
+            map[colName] = field
         }
 
-        val field_arr = columns.toTypedArray()
+        val fieldArr = columns.toTypedArray()
         columns.toTypedArray()
         var c: Cursor? = null
         try {
-            val table_name = obtainEntityTableName(clazz)
-            c = query(table_name, field_arr, " id=? ", arrayOf(id), "", "", "")
-            if (c!!.moveToNext()) {
+            val tableName = obtainEntityTableName(clazz)
+            c = query(tableName, fieldArr, " id=? ", arrayOf(id), "", "", "")
+            if (c.moveToNext()) {
                 try {
                     entity = clazz.newInstance()
                 } catch (e: InstantiationException) {
-                    Log.e("console", e.localizedMessage, e)
+                    Log.e("tgldb", e.localizedMessage, e)
                     return null
                 } catch (e: IllegalAccessException) {
-                    Log.e("console", e.localizedMessage, e)
+                    Log.e("tgldb", e.localizedMessage, e)
                     return null
                 }
 
                 cusor2Entity(entity, columns, map, c)
             }
         } catch (e: Exception) {
-            Log.e("console", e.localizedMessage, e)
+            Log.e("tgldb", e.localizedMessage, e)
         } finally {
-            if (c != null) {
-                c!!.close()
-            }
+            c?.close()
         }
 
         return entity
@@ -603,7 +602,6 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
      */
     private fun cusor2Entity(entity: T?, columns: List<String>, map: Map<String, Field>, c: Cursor) {
         for (col_name in columns) {
-            Log.i("console", "col:$col_name")
             try {
                 val field = map[col_name]
                 val type = field!!.type
@@ -629,21 +627,24 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
      */
     fun delete(entity: T?): Int {
         var res = 0
-        if (entity == null || StringUtils.isBlank(entity!!.id)) {
+        if (entity == null || StringUtils.isBlank(entity.id)) {
+            Log.v("tgldb","remove null or entity's id is null")
             return res
         }
 
-        val clz = entity!!.javaClass
+        val clz = entity.javaClass
 
-        val ann_table = clz.getAnnotation(Table::class.java)
-        if (ann_table == null) {
-            Log.e("console", clz.name + " is not annotation " + Table::class.java.name)
+        val annTable = clz.getAnnotation(Table::class.java)
+        if (annTable == null) {
+            Log.e("tgldb", clz.name + " is not annotation " + Table::class.java.name)
             return res
         }
 
-        val table_name = ann_table!!.value
+        val tableName = annTable.value
 
-        res = delete(table_name, "id = ?", arrayOf(entity!!.id))
+        res = delete(tableName, "id = ?", arrayOf(entity.id))
+
+        Log.v("tgldb","remove $tableName which's id is $entity.id")
 
         return res
     }
@@ -668,29 +669,29 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
 
         for (field in clz.declaredFields) {
             val col = field.getAnnotation(Column::class.java) ?: continue
-            val col_name = col.value
-            if (col_name == null || col_name!!.trim { it <= ' ' } == "") {
+            val colName = col.value
+            if (colName == null || colName!!.trim { it <= ' ' } == "") {
                 continue
             }
 
-            columns.add(col_name)
-            map[col_name] = field
+            columns.add(colName)
+            map[colName] = field
 
             try {
                 field.isAccessible = true
-                val col_val = field.get(entity) ?: continue
-                when (col_val) {
-                    is String -> values.put(col_name, col_val)
-                    is Long -> values.put(col_name, col_val)
-                    is Int -> values.put(col_name, col_val)
-                    is Float -> values.put(col_name, col_val)
-                    is Double -> values.put(col_name, col_val)
-                    is Double -> values.put(col_name, col_val)
-                    is Boolean -> values.put(col_name, col_val)
-                    else -> values.put(col_name, col_val.toString())
+                val colVal = field.get(entity) ?: continue
+                when (colVal) {
+                    is String -> values.put(colName, colVal)
+                    is Long -> values.put(colName, colVal)
+                    is Int -> values.put(colName, colVal)
+                    is Float -> values.put(colName, colVal)
+                    is Double -> values.put(colName, colVal)
+                    is Double -> values.put(colName, colVal)
+                    is Boolean -> values.put(colName, colVal)
+                    else -> values.put(colName, colVal.toString())
                 }
             } catch (e: IllegalAccessException) {
-                Log.e("console", e.localizedMessage, e)
+                Log.e("tgldb", e.localizedMessage, e)
                 continue
             }
 
@@ -700,30 +701,28 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
         if (id == null) {
             id = UUID.randomUUID().toString()
             values.put("id", id)
-            val ins_res = insertOrThrow(table_name, null, values)
-            Log.v("console", "insert rows:$ins_res")
+            val insRes = insertOrThrow(table_name, null, values)
+            Log.v("tgldb", "insert rows:$insRes")
         } else {
             val upd_res = update(table_name, values, "id=?", arrayOf(id)).toLong()
-            Log.v("console", "update rows:$upd_res")
+            Log.v("tgldb", "update rows:$upd_res")
         }
-        val field_arr = columns.toTypedArray()
+        val fieldArr = columns.toTypedArray()
         columns.toTypedArray()
-        var c: Cursor? = null
+        var cursor: Cursor? = null
         try {
-            c = query(table_name, field_arr, " id=? ", arrayOf(id), "", "", "")
+            cursor = query(table_name, fieldArr, " id=? ", arrayOf(id), "", "", "")
 
-            if (c!!.moveToNext()) {
-                cusor2Entity(entity, columns, map, c)
+            if (cursor.moveToNext()) {
+                cusor2Entity(entity, columns, map, cursor)
             }else {
-                val ins_res = insertOrThrow(table_name, null, values)
-                Log.v("console", "insert rows:$ins_res")
+                val insRes = insertOrThrow(table_name, null, values)
+                Log.v("tgldb", "insert rows:$insRes")
             }
         } catch (e: Exception) {
-            Log.e("console", e.localizedMessage, e)
+            Log.e("tgldb", e.localizedMessage, e)
         } finally {
-            if (c != null) {
-                c!!.close()
-            }
+            cursor?.close()
         }
 
 
@@ -734,7 +733,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
     /**
      * .
      */
-    private fun obtainEntityTableName(clz: Class<*>): String? {
+    private fun obtainEntityTableName(clz: Class<*>): String {
         return clz.getAnnotation(Table::class.java).value
     }
 
