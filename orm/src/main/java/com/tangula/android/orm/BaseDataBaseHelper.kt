@@ -1,5 +1,6 @@
 package com.tangula.android.orm
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.SQLException
@@ -9,6 +10,7 @@ import android.database.sqlite.SQLiteStatement
 import android.database.sqlite.SQLiteTransactionListener
 import android.os.CancellationSignal
 import android.util.Log
+import com.tangula.android.utils.SdkVersionDecides
 import org.apache.commons.lang3.StringUtils
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
@@ -77,6 +79,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
         private var DB_CREATOR: DbCreator? = null
 
         @JvmStatic
+        @Suppress("unused")
         fun setDbCreator(creator: DbCreator){
             DB_CREATOR = creator
         }
@@ -129,6 +132,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::beginTransaction}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun beginTransaction() {
             getDatabase()!!.beginTransaction()
         }
@@ -137,6 +141,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::beginTransactionNonExclusive}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun beginTransactionNonExclusive() {
             getDatabase()!!.beginTransactionNonExclusive()
         }
@@ -145,6 +150,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::beginTransactionWithListener}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun beginTransactionWithListener(transactionListener: SQLiteTransactionListener) {
             getDatabase()!!.beginTransactionWithListener(transactionListener)
         }
@@ -153,6 +159,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::beginTransactionWithListenerNonExclusive}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun beginTransactionWithListenerNonExclusive(transactionListener: SQLiteTransactionListener) {
             getDatabase()!!.beginTransactionWithListenerNonExclusive(transactionListener)
         }
@@ -161,6 +168,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::endTransaction}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun endTransaction() {
             getDatabase()!!.endTransaction()
         }
@@ -169,6 +177,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::setTransactionSuccessful}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun setTransactionSuccessful() {
             getDatabase()!!.setTransactionSuccessful()
         }
@@ -177,6 +186,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::inTransaction}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun inTransaction(): Boolean {
             return getDatabase()!!.inTransaction()
         }
@@ -185,6 +195,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::getVersion}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun getVersion(): Int {
             return getDatabase()!!.version
         }
@@ -193,6 +204,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::setVersion}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun setVersion(version: Int) {
             getDatabase()!!.version = version
         }
@@ -201,6 +213,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::SQLException}.
          */
         @JvmStatic
+        @Suppress("unused")
         @Throws(SQLException::class)
         protected fun compileStatement(sql: String): SQLiteStatement {
             return getDatabase()!!.compileStatement(sql)
@@ -210,6 +223,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::query}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun query(distinct: Boolean, table: String, columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String, limit: String): Cursor {
             return getDatabase()!!.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit)
         }
@@ -218,6 +232,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::query}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun query(distinct: Boolean, table: String, columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String, limit: String, cancellationSignal: CancellationSignal): Cursor {
             return getDatabase()!!.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit, cancellationSignal)
         }
@@ -226,6 +241,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::queryWithFactory}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun queryWithFactory(cursorFactory: SQLiteDatabase.CursorFactory, distinct: Boolean, table: String, columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String, limit: String): Cursor {
             return getDatabase()!!.queryWithFactory(cursorFactory, distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit)
         }
@@ -234,6 +250,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::queryWithFactory}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun queryWithFactory(cursorFactory: SQLiteDatabase.CursorFactory, distinct: Boolean, table: String, columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String, limit: String, cancellationSignal: CancellationSignal): Cursor {
             return getDatabase()!!.queryWithFactory(cursorFactory, distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit, cancellationSignal)
         }
@@ -242,6 +259,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::query}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun query(table: String?, columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String): Cursor {
             return getDatabase()!!.query(table, columns, selection, selectionArgs, groupBy, having, orderBy)
         }
@@ -250,6 +268,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::query}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun query(table: String, columns: Array<String>, selection: String, selectionArgs: Array<String>, groupBy: String, having: String, orderBy: String, limit: String): Cursor {
             return getDatabase()!!.query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit)
         }
@@ -258,6 +277,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::rawQuery}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun rawQuery(sqlResId: Int, selectionArgs: Array<String>): Cursor {
             return rawQuery(CONTEXT_FAC!!.get().getString(sqlResId), selectionArgs)
         }
@@ -266,6 +286,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::rawQuery}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun rawQuery(sql: String, selectionArgs: Array<String>): Cursor {
             return getDatabase()!!.rawQuery(sql, selectionArgs)
         }
@@ -274,6 +295,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::rawQuery}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun rawQuery(sqlResId: Int, selectionArgs: Array<String>, cancellationSignal: CancellationSignal): Cursor {
             return rawQuery(CONTEXT_FAC!!.get().getString(sqlResId), selectionArgs, cancellationSignal)
         }
@@ -282,6 +304,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::rawQuery}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun rawQuery(sql: String, selectionArgs: Array<String>, cancellationSignal: CancellationSignal): Cursor {
             return getDatabase()!!.rawQuery(sql, selectionArgs, cancellationSignal)
         }
@@ -290,6 +313,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::rawQueryWithFactory}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun rawQueryWithFactory(cursorFactory: SQLiteDatabase.CursorFactory, sql: String, selectionArgs: Array<String>, editTable: String): Cursor {
             return getDatabase()!!.rawQueryWithFactory(cursorFactory, sql, selectionArgs, editTable)
         }
@@ -298,6 +322,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::rawQueryWithFactory}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun rawQueryWithFactory(cursorFactory: SQLiteDatabase.CursorFactory, sql: String, selectionArgs: Array<String>, editTable: String, cancellationSignal: CancellationSignal): Cursor {
             return getDatabase()!!.rawQueryWithFactory(cursorFactory, sql, selectionArgs, editTable, cancellationSignal)
         }
@@ -306,6 +331,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::insert}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun insert(table: String, nullColumnHack: String, values: ContentValues): Long {
             return getDatabase()!!.insert(table, nullColumnHack, values)
         }
@@ -314,6 +340,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::insertOrThrow}.
          */
         @JvmStatic
+        @Suppress("unused")
         @Throws(SQLException::class)
         protected fun insertOrThrow(table: String, nullColumnHack: String?, values: ContentValues): Long {
             return getDatabase()!!.insertOrThrow(table, nullColumnHack, values)
@@ -323,6 +350,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::replace}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun replace(table: String, nullColumnHack: String, initialValues: ContentValues): Long {
             return getDatabase()!!.replace(table, nullColumnHack, initialValues)
         }
@@ -331,6 +359,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::replaceOrThrow}.
          */
         @JvmStatic
+        @Suppress("unused")
         @Throws(SQLException::class)
         protected fun replaceOrThrow(table: String, nullColumnHack: String, initialValues: ContentValues): Long {
             return getDatabase()!!.replaceOrThrow(table, nullColumnHack, initialValues)
@@ -340,6 +369,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::insertWithOnConflict}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun insertWithOnConflict(table: String, nullColumnHack: String, initialValues: ContentValues, conflictAlgorithm: Int): Long {
             return getDatabase()!!.insertWithOnConflict(table, nullColumnHack, initialValues, conflictAlgorithm)
         }
@@ -348,6 +378,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::delete}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun delete(table: String, whereClause: String, whereArgs: Array<String>): Int {
             return getDatabase()!!.delete(table, whereClause, whereArgs)
         }
@@ -356,6 +387,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::update}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun update(table: String, values: ContentValues, whereClause: String, whereArgs: Array<String>): Int {
             return getDatabase()!!.update(table, values, whereClause, whereArgs)
         }
@@ -364,6 +396,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::updateWithOnConflict}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun updateWithOnConflict(table: String, values: ContentValues, whereClause: String, whereArgs: Array<String>, conflictAlgorithm: Int): Int {
             return getDatabase()!!.updateWithOnConflict(table, values, whereClause, whereArgs, conflictAlgorithm)
         }
@@ -372,6 +405,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::execSQL}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun execSQL(resId: Int) {
             execSQL(CONTEXT_FAC!!.get().getString(resId))
         }
@@ -389,6 +423,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::execSQL}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun execSQL(resId: Int, bindArgs: Array<Any>) {
             execSQL(CONTEXT_FAC!!.get().getString(resId, *bindArgs))
         }
@@ -397,6 +432,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::execSQL}.
          */
         @JvmStatic
+        @Suppress("unused")
         @Throws(SQLException::class)
         protected fun execSQL(sql: String, bindArgs: Array<Any>) {
             getDatabase()!!.execSQL(sql, bindArgs)
@@ -405,14 +441,18 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
         /**
          * This is a proxy function for {SQLiteDatabase::validateSql}.
          */
+        @SuppressLint("NewApi")
         @JvmStatic
-        protected fun validateSql(sql: String, cancellationSignal: CancellationSignal?) =//getDatabase().validateSql(sql, cancellationSignal);
-                Unit
+        @Suppress("unused")
+        protected fun validateSql(sql: String, cancellationSignal: CancellationSignal?) {
+            SdkVersionDecides.afterSdk24A7d0{getDatabase()?.validateSql(sql, cancellationSignal)}
+        }
 
         /**
          * This is a proxy function for {SQLiteDatabase::isReadOnly}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun isReadOnly(): Boolean {
             return getDatabase()!!.isReadOnly
         }
@@ -421,6 +461,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::isOpen}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun isOpen(): Boolean {
             return getDatabase()!!.isOpen
         }
@@ -429,6 +470,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::needUpgrade}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun needUpgrade(newVersion: Int): Boolean {
             return getDatabase()!!.needUpgrade(newVersion)
         }
@@ -437,6 +479,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::setLocale}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun setLocale(locale: Locale) {
             getDatabase()!!.setLocale(locale)
         }
@@ -445,6 +488,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * This is a proxy function for {SQLiteDatabase::setMaxSqlCacheSize}.
          */
         @JvmStatic
+        @Suppress("unused")
         protected fun setMaxSqlCacheSize(cacheSize: Int) {
             getDatabase()!!.setMaxSqlCacheSize(cacheSize)
         }
@@ -457,30 +501,25 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
          * the table exists, would execute nothing.
          */
         @JvmStatic
+        @Suppress("unused")
         fun <T : Entity<String>> createTable(database: SQLiteDatabase, entityClz: Class<T>, force: Boolean){
 
-            val clz_ann:Table? =  entityClz.getAnnotation(Table::class.java)
-            if(clz_ann==null){
-                return
-            }
-
-
-            val tablename: String = clz_ann.value ?: return
-
-            val column_defs = StringBuffer("\tid text primary key") //default id column.
+            val clzAnn: Table = entityClz.getAnnotation(Table::class.java) ?: return
+            val tablename: String = clzAnn.value
+            val columnDefs = StringBuffer("\tid text primary key") //default id column.
 
             for(f in entityClz.declaredFields){
                 if(StringUtils.equals("id", f.name)){ //skip the id property, and id type is uuid..
                     continue
                 }
 
-                val field_ann: Column? = f.getAnnotation(Column::class.java) ?: continue
+                val fieldAnn: Column? = f.getAnnotation(Column::class.java) ?: continue
 
-                val col_name = field_ann?.value
-                val col_type = field_ann?.type
+                val colName = fieldAnn?.value
+                val colType = fieldAnn?.type
 
-                if(col_name!=null&&col_type!=null){
-                    column_defs.append(",\n\t$col_name ${col_type.name}")
+                if(colName!=null&&colType!=null){
+                    columnDefs.append(",\n\t$colName ${colType.name}")
                 }
 
             }
@@ -490,20 +529,26 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
             }
 
             //execute the create sql of the table.
-            database.execSQL("create table if not exists $tablename ($column_defs)")
+            database.execSQL("create table if not exists $tablename ($columnDefs)")
 
         }
 
     }
 
+
+    @Suppress("UNCHECKED_CAST")
+    private fun fetchParameterdEntityType():Class<T>{
+        val pt = javaClass.genericSuperclass as ParameterizedType
+        return pt.actualTypeArguments[0] as Class<T>
+    }
+
+
     /**
      * Obtain the query reuslt,.
      */
-    fun byCondition(condition: String, args: Array<String>, group: String, having: String, orderby: String): List<T> {
-        val res = ArrayList<T>()
-
-        val pt = javaClass.genericSuperclass as ParameterizedType
-        val clazz = pt.actualTypeArguments[0] as Class<T>
+    @Suppress("UNUSED")
+    fun <E : Entity<String>> byCondition(clazz:Class<E>, condition: String, args: Array<String>, group: String, having: String, orderby: String): List<E> {
+        val res = ArrayList<E>()
 
         val columns = ArrayList<String>()
         val map = HashMap<String, Field>()
@@ -547,13 +592,19 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
     }
 
     /**
+     * Obtain the query reuslt,.
+     */
+    @Suppress("UNUSED")
+    fun byCondition(condition: String, args: Array<String>, group: String, having: String, orderby: String): List<T>{
+        return byCondition(fetchParameterdEntityType(), condition, args, group, having, orderby)
+    }
+
+    /**
      * .
      */
-    fun byId(id: String): T? {
-        var entity: T? = null
-
-        val pt = javaClass.genericSuperclass as ParameterizedType
-        val clazz = pt.actualTypeArguments[0] as Class<T>
+    @Suppress("UNUSED")
+    fun <E : Entity<String>> byId(id: String, clazz:Class<E>): E? {
+        var entity: E? = null
 
         val columns = ArrayList<String>()
         val map = HashMap<String, Field>()
@@ -597,10 +648,18 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
         return entity
     }
 
+
     /**
      * .
      */
-    private fun cusor2Entity(entity: T?, columns: List<String>, map: Map<String, Field>, c: Cursor) {
+    fun byId(id: String): T? {
+        return byId(id, fetchParameterdEntityType())
+    }
+
+    /**
+     * .
+     */
+    private fun <E : Entity<String>> cusor2Entity(entity: E?, columns: List<String>, map: Map<String, Field>, c: Cursor) {
         for (col_name in columns) {
             try {
                 val field = map[col_name]
@@ -625,6 +684,7 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
     /**
      * .
      */
+    @Suppress("unused")
     fun delete(entity: T?): Int {
         var res = 0
         if (entity == null || StringUtils.isBlank(entity.id)) {
@@ -653,15 +713,16 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
     /**
      * .
      */
+    @Suppress("unused")
     fun save(entity: T?): T? {
 
         if (entity == null) {
             return entity
         }
 
-        val clz = entity!!.javaClass
+        val clz = entity.javaClass
 
-        val table_name = obtainEntityTableName(clz) ?: return null
+        val tablename = obtainEntityTableName(clz) ?: return null
         val values = ContentValues()
 
         val columns = ArrayList<String>()
@@ -670,7 +731,8 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
         for (field in clz.declaredFields) {
             val col = field.getAnnotation(Column::class.java) ?: continue
             val colName = col.value
-            if (colName == null || colName!!.trim { it <= ' ' } == "") {
+
+            if ( StringUtils.isBlank(StringUtils.trimToEmpty(colName))) {
                 continue
             }
 
@@ -686,7 +748,6 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
                     is Int -> values.put(colName, colVal)
                     is Float -> values.put(colName, colVal)
                     is Double -> values.put(colName, colVal)
-                    is Double -> values.put(colName, colVal)
                     is Boolean -> values.put(colName, colVal)
                     else -> values.put(colName, colVal.toString())
                 }
@@ -697,26 +758,26 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
 
         }
 
-        var id: String? = entity!!.id
-        if (id == null) {
+        var id: String? = entity.id
+        if(id !is String || StringUtils.isBlank(id)) {
             id = UUID.randomUUID().toString()
             values.put("id", id)
-            val insRes = insertOrThrow(table_name, null, values)
-            Log.v("tgldb", "insert rows:$insRes")
+            val res = insertOrThrow(tablename, null, values)
+            Log.v("tgldb", "insert rows:$res into $tablename")
         } else {
-            val upd_res = update(table_name, values, "id=?", arrayOf(id)).toLong()
-            Log.v("tgldb", "update rows:$upd_res")
+            val res = update(tablename, values, "id=?", arrayOf(id)).toLong()
+            Log.v("tgldb", "update rows:$res into $tablename")
         }
         val fieldArr = columns.toTypedArray()
         columns.toTypedArray()
         var cursor: Cursor? = null
         try {
-            cursor = query(table_name, fieldArr, " id=? ", arrayOf(id), "", "", "")
+            cursor = query(tablename, fieldArr, " id=? ", arrayOf(id), "", "", "")
 
             if (cursor.moveToNext()) {
                 cusor2Entity(entity, columns, map, cursor)
             }else {
-                val insRes = insertOrThrow(table_name, null, values)
+                val insRes = insertOrThrow(tablename, null, values)
                 Log.v("tgldb", "insert rows:$insRes")
             }
         } catch (e: Exception) {
@@ -725,16 +786,14 @@ abstract class BaseDataBaseHelper<T : Entity<String>> {
             cursor?.close()
         }
 
-
-
         return entity
     }
 
     /**
      * .
      */
-    private fun obtainEntityTableName(clz: Class<*>): String {
-        return clz.getAnnotation(Table::class.java).value
+    private fun <T> obtainEntityTableName(clz: Class<T>): String? {
+        return clz.getAnnotation(Table::class.java)?.value
     }
 
 }

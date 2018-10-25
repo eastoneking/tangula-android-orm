@@ -4,6 +4,8 @@ import android.content.Intent
 import android.content.ServiceConnection
 import com.tangula.android.base.TglLocalServiceBinder
 import com.tangula.android.base.TglService
+import com.tangula.android.orm.BaseDataBaseHelper
+import com.tangula.android.orm.Entity
 import com.tangula.android.utils.ApplicationUtils
 import com.tangula.android.utils.TaskUtils
 import com.tangula.utils.ConcurrentUtils
@@ -24,7 +26,7 @@ class BasicDbService : TglService<DbBinder>() {
     }
 
     companion object {
-        fun execSql(callback: () -> Unit): Closeable {
+        fun exec(callback: () -> Unit): Closeable {
             lateinit var conn: ServiceConnection
             var closed = false
             val res = Closeable {
@@ -42,6 +44,11 @@ class BasicDbService : TglService<DbBinder>() {
             }, { _ -> }) {}
             return res
         }
+    }
+
+
+    fun <E:Entity<String>> execSql(callback: (BaseDataBaseHelper<E>) -> Unit): Closeable {
+        return exec{callback.invoke(object:BaseDataBaseHelper<E>(){})}
     }
 
 }
